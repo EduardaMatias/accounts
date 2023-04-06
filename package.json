@@ -1,0 +1,31 @@
+{
+  "name": "accounts-project",
+  "version": "1.0.0",
+  "description": "Projeto conta bancaria com node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EduardaMatias/accounts.git"
+  },
+  "keywords": [
+    "node",
+    "conta",
+    "banco",
+    "projeto",
+    "javascript"
+  ],
+  "author": "Eduarda Matias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EduardaMatias/accounts/issues"
+  },
+  "homepage": "https://github.com/EduardaMatias/accounts#readme",
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "inquirer": "^9.1.5"
+  }
+}
