@@ -30,6 +30,18 @@ function operation() {
         case 'Criar conta':
           createAccount();
           break;
+        case 'Consultar saldo':
+          console.log('Consultar saldo');
+          break;
+        case 'Depositar':
+          console.log('Depositar');
+          break;
+        case 'Sacar':
+          console.log('Sacar');
+          break;
+        case 'Sair':
+          console.log('Sair');
+          break;
       }
     })
     .catch((err) => console.log(err));
