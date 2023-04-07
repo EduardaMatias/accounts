@@ -3,7 +3,7 @@ import chalk from 'chalk';
 
 import fs from 'fs';
 
-const options = [
+const menuOptions = [
   'Criar conta',
   'Consultar saldo',
   'Depositar',
@@ -18,7 +18,7 @@ const options = [
         type: 'list',
         name: 'action',
         message: 'O que você deseja fazer?',
-        choices: options,
+        choices: menuOptions,
       },
     ])
     .then(() => {})
