@@ -40,7 +40,8 @@ function operation() {
           console.log('Sacar');
           break;
         case 'Sair':
-          console.log('Sair');
+          console.log(chalk.bgBlue.black('Obrigada por usar o Accounts!'));
+          process.exit();
           break;
       }
     })
