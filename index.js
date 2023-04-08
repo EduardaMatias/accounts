@@ -8,6 +8,7 @@ const menuOptions = [
   'Consultar saldo',
   'Depositar',
   'Sacar',
+  'Fechar conta',
   'Sair',
 ];
 
@@ -39,10 +40,12 @@ function operation() {
         case 'Sacar':
           withdraw();
           break;
+        case 'Fechar conta':
+          closeAccount();
+          break;
         case 'Sair':
           console.log(chalk.bgBlue.black('Obrigada por usar o Accounts!'));
           process.exit();
-          break;
       }
     })
     .catch((err) => console.log(err));
@@ -245,6 +248,70 @@ function removeAmount(accountName, amount) {
 
   operation();
 }
+
+function closeAccount() {
+  inquirer
+    .prompt([
+      {
+        name: 'accountName',
+        message: 'Qual o nome da sua conta?',
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer['accountName'];
+
+      if (!checkAccount(accountName)) {
+        return closeAccount();
+      }
+
+      inquirer
+        .prompt([
+          {
+            type: 'list',
+            name: 'option',
+            message: `Tem certeza que deseja fechar a conta ${accountName}?`,
+            choices: ['Sim', 'Não'],
+          },
+        ])
+        .then((answer) => {
+          const option = answer['option'];
+          switch (option) {
+            case 'Não':
+              operation();
+              break;
+            case 'Sim':
+              removeAccount(accountName);
+              break;
+          }
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+}
+
+function removeAccount(accountName) {
+  const accountData = getAccount(accountName);
+
+  if (accountData.balance > 0) {
+    console.log(
+      chalk.bgRed.black(
+        'Erro ao fechar: você precisa esvaziar a conta antes de fechá-la'
+      )
+    );
+
+    return operation();
+  }
+
+  fs.unlink(`accounts/${accountName}.json`, function (err) {
+    return console.log(err);
+  });
+
+  console.log(chalk.green(`A conta ${accountName} foi fechada com sucesso!`));
+
+  operation();
+}
+
+// implementar: transferência bancaria 
 
 //utils
 
