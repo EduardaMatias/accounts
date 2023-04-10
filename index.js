@@ -72,7 +72,6 @@ function buildAccount() {
     ])
     .then((answer) => {
       const accountName = answer['accountName'];
-      console.info(accountName);
 
       if (!fs.existsSync('accounts')) {
         fs.mkdirSync('accounts');
