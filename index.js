@@ -8,6 +8,7 @@ const menuOptions = [
   'Consultar saldo',
   'Depositar',
   'Sacar',
+  'Transferência bancária',
   'Fechar conta',
   'Sair',
 ];
@@ -39,6 +40,9 @@ function operation() {
           break;
         case 'Sacar':
           withdraw();
+          break;
+        case 'Transferência bancária':
+          transferFunds();
           break;
         case 'Fechar conta':
           closeAccount();
@@ -311,7 +315,99 @@ function removeAccount(accountName) {
   operation();
 }
 
-// implementar: transferência bancaria 
+function transferFunds() {
+  inquirer
+    .prompt([
+      {
+        name: 'accountOriginName',
+        message: 'Qual o nome da sua conta?',
+      },
+    ])
+    .then((answer) => {
+      const accountOriginName = answer['accountOriginName'];
+
+      if (!checkAccount(accountOriginName)) {
+        return transferFunds();
+      }
+
+      inquirer
+        .prompt([
+          {
+            name: 'destinationAccountName',
+            message: 'Qual o nome da conta do destinatário?',
+          },
+        ])
+        .then((answer) => {
+          const destinationAccountName = answer['destinationAccountName'];
+
+          if (!checkAccount(destinationAccountName)) {
+            return transferFunds();
+          }
+
+          sendMoney(accountOriginName, destinationAccountName);
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+}
+
+function sendMoney(origin, destination) {
+  inquirer
+    .prompt([
+      {
+        name: 'amount',
+        message: `Qual valor você deseja transferir para a conta ${destination}?`,
+      },
+    ])
+    .then((answer) => {
+      const amount = answer['amount'];
+
+      const accountOriginData = getAccount(origin);
+      const accountDestionationData = getAccount(destination);
+
+      if (!amount) {
+        console.log(
+          chalk.bgRed.black('Ocorreu um erro, tente novamente mais tarde!')
+        );
+        return transferFunds();
+      }
+
+      if (accountOriginData.balance < amount) {
+        console.log(chalk.bgRed.black('Valor indisponível no momento!'));
+        return transferFunds();
+      }
+
+      accountOriginData.balance =
+        parseFloat(accountOriginData.balance) - parseFloat(amount);
+      accountDestionationData.balance =
+        parseFloat(accountDestionationData.balance) + parseFloat(amount);
+
+      fs.writeFileSync(
+        `accounts/${origin}.json`,
+        JSON.stringify(accountOriginData),
+        function (err) {
+          console.log(err);
+        }
+      );
+
+      fs.writeFileSync(
+        `accounts/${destination}.json`,
+        JSON.stringify(accountDestionationData),
+        function (err) {
+          console.log(err);
+        }
+      );
+
+      console.log(
+        chalk.green(
+          `Foi realizado uma transferência no valor de R$${amount} da sua conta ${origin} para a conta ${destination}!`
+        )
+      );
+
+      operation();
+    })
+    .catch((err) => console.log(err));
+}
 
 //utils
 
